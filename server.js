@@ -11,7 +11,7 @@ app.use(cors());
 // Importação das rotas
 const authRoutes = require("./routes/authRoutes");
 const produtoRoutes = require("./routes/produtoRoutes");
-const clienteRoutes = require("./routes/clienteRoutes");
+const usuarioRoutes = require("./routes/usuarioRoutes"); // Nova rota unificada
 const categoriaRoutes = require("./routes/categoriaRoutes");
 const pedidoRoutes = require("./routes/pedidoRoutes");
 const pontosRoutes = require("./routes/pontosRoutes");
@@ -19,10 +19,13 @@ const pontosRoutes = require("./routes/pontosRoutes");
 // Definição das rotas
 app.use("/auth", authRoutes);
 app.use("/produtos", produtoRoutes);
-app.use("/clientes", clienteRoutes);
+app.use("/usuarios", usuarioRoutes); // Rota unificada para usuários/clientes
 app.use("/categorias", categoriaRoutes);
 app.use("/pedidos", pedidoRoutes);
 app.use("/pontos", pontosRoutes);
+
+// Manter compatibilidade com rota antiga de clientes (opcional)
+app.use("/clientes", usuarioRoutes);
 
 // Rota de erro 404
 app.use((req, res) => {

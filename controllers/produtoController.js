@@ -70,8 +70,7 @@ exports.deletar = async (req, res) => {
     if (!deletado) {
       return res.status(404).json({ message: "Produto não encontrado" });
     }
-
-    return res.status(204).send();
+    return res.status(204).json({ message: "Produto deletado" });
   } catch (error) {
     return res
       .status(500)

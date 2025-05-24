@@ -5,6 +5,15 @@ exports.listar = async () => {
   return await Pedido.findAll({ include: ItemPedido });
 };
 
+// Listar pedidos por cliente_id (com itens)
+exports.listarPorCliente = async (cliente_id) => {
+  return await Pedido.findAll({
+    where: { cliente_id },
+    include: ItemPedido,
+    order: [["data_pedido", "DESC"]],
+  });
+};
+
 // Buscar por ID (com itens)
 exports.buscarPorId = async (id) => {
   return await Pedido.findByPk(id, { include: ItemPedido });

@@ -3,7 +3,21 @@ const pedidoService = require("../services/pedidoService");
 // GET /pedidos
 exports.listar = async (req, res) => {
   const pedidos = await pedidoService.listar();
-  res.json(pedidos);
+  return res.json(pedidos);
+};
+
+// GET /pedidos/meus-pedidos
+exports.listarMeusPedidos = async (req, res) => {
+  try {
+    const cliente_id = req.usuario.id;
+    const pedidos = await pedidoService.listarPorCliente(cliente_id);
+    return res.json(pedidos);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erro ao listar pedidos",
+      error: error.message,
+    });
+  }
 };
 
 // GET /pedidos/:id
@@ -13,7 +27,7 @@ exports.buscarPorId = async (req, res) => {
   if (!pedido) {
     return res.status(404).json({ message: "Pedido não encontrado" });
   }
-  res.json(pedido);
+  return res.json(pedido);
 };
 
 // POST /pedidos
@@ -24,9 +38,9 @@ exports.criar = async (req, res) => {
       { cliente_id, status, valor_total },
       itens
     );
-    res.status(201).json(novoPedido);
+    return res.status(201).json(novoPedido);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -38,7 +52,7 @@ exports.atualizarStatus = async (req, res) => {
   if (!atualizado) {
     return res.status(404).json({ message: "Pedido não encontrado" });
   }
-  res.json(atualizado);
+  return res.json(atualizado);
 };
 
 // DELETE /pedidos/:id
@@ -48,5 +62,5 @@ exports.deletar = async (req, res) => {
   if (!removido) {
     return res.status(404).json({ message: "Pedido não encontrado" });
   }
-  res.status(204).json({ message: "Pedido deletado" });
+  return res.status(204).json({ message: "Pedido deletado" });
 };

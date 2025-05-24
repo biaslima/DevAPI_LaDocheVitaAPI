@@ -30,6 +30,7 @@ const verificarPermissaoPedido = async (req, res, next) => {
 };
 
 router.get("/", verificarAdmin, pedidoController.listar);
+router.get("/meus-pedidos", autenticacao, pedidoController.listarMeusPedidos);
 router.get(
   "/:id",
   autenticacao,

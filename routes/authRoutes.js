@@ -13,6 +13,7 @@ router.get("/me", autenticacao, (req, res) => {
       id: req.usuario.id,
       email: req.usuario.email,
       role: req.usuario.role,
+      nome: req.usuario.nome,
     },
   });
 });

@@ -3,7 +3,7 @@ const categoriaService = require("../services/categoriaService");
 // Listar todas as categorias
 exports.listar = async (req, res) => {
   const categorias = await categoriaService.listar();
-  res.status(200).json(categorias);
+  return res.status(200).json(categorias);
 };
 
 // Buscar categoria por ID
@@ -13,7 +13,7 @@ exports.buscarPorId = async (req, res) => {
   if (!categoria) {
     return res.status(404).json({ message: "Categoria não encontrada" });
   }
-  res.status(200).json(categoria);
+  return res.status(200).json(categoria);
 };
 
 // Criar nova categoria
@@ -21,9 +21,9 @@ exports.criar = async (req, res) => {
   const dados = req.body;
   try {
     const novo = await categoriaService.criar(dados);
-    res.status(201).json(novo);
+    return res.status(201).json(novo);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -38,7 +38,7 @@ exports.atualizar = async (req, res) => {
     return res.status(404).json({ message: "Categoria não encontrada" });
   }
 
-  res.status(200).json(atualizado);
+  return res.status(200).json(atualizado);
 };
 
 // Deletar categoria
@@ -49,6 +49,5 @@ exports.deletar = async (req, res) => {
   if (!deletado) {
     return res.status(404).json({ message: "Categoria não encontrada" });
   }
-
-  res.status(204).send({ message: "Categoria deletada." });
+  return res.status(204).send({ message: "Categoria deletada." });
 };

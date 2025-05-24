@@ -6,18 +6,20 @@ require("dotenv").config();
 const rodadaHash = 10;
 
 exports.register = async (req, res) => {
-  const { nome, email, senha, role } = req.body;
+  const { nome, email, senha, telefone, role } = req.body;
 
   try {
     const usuarioExistente = await Usuario.findOne({ where: { email } });
     if (usuarioExistente) {
-      res.status(409).json({ message: "E-mail já cadastrado" });
+      return res.status(409).json({ message: "E-mail já cadastrado" });
     }
+
     const senhaHash = await bcrypt.hash(senha, rodadaHash);
     const novoUsuario = await Usuario.create({
       nome,
       email,
       senha: senhaHash,
+      telefone,
       role: role || "cliente",
     });
 
@@ -49,14 +51,22 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Senha incorreta" });
     }
 
+    const { senha: _, ...usuarioSemSenha } = usuario.toJSON();
+
     const token = jwt.sign(
       { id: usuario.usuario_id, role: usuario.role, email: usuario.email },
       process.env.JWT_SENHA,
       { expiresIn: "1h" }
     );
 
-    return res.json({ message: "Login bem-sucedido", token, usuarioSemSenha });
+    return res.json({
+      message: "Login bem-sucedido",
+      token,
+      usuario: usuarioSemSenha,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao fazer login", error });
+    return res
+      .status(500)
+      .json({ message: "Erro ao fazer login", error: error.message });
   }
 };
