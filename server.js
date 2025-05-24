@@ -19,15 +19,13 @@ const pontosRoutes = require("./routes/pontosRoutes");
 // Definição das rotas
 app.use("/auth", authRoutes);
 app.use("/produtos", produtoRoutes);
-app.use("/usuarios", usuarioRoutes); // Rota unificada para usuários/clientes
+app.use("/usuarios", usuarioRoutes);
 app.use("/categorias", categoriaRoutes);
 app.use("/pedidos", pedidoRoutes);
 app.use("/pontos", pontosRoutes);
 
-// Manter compatibilidade com rota antiga de clientes (opcional)
 app.use("/clientes", usuarioRoutes);
 
-// Rota de erro 404
 app.use((req, res) => {
   res.status(404).json({ message: "Rota não encontrada" });
 });

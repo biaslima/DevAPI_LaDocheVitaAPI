@@ -1,7 +1,6 @@
 const Pontos = require("../models/Pontos");
 const Usuario = require("../models/Usuario");
 
-// Buscar pontos de um cliente
 exports.getPontosCliente = async (cliente_id) => {
   try {
     // Primeiro, verificar se o cliente existe
@@ -15,13 +14,10 @@ exports.getPontosCliente = async (cliente_id) => {
     if (!cliente) {
       return null;
     }
-
-    // Buscar ou criar registro de pontos
     let pontos = await Pontos.findOne({
       where: { cliente_id: cliente_id },
     });
 
-    // Se não existir registro de pontos, criar um novo
     if (!pontos) {
       pontos = await Pontos.create({
         cliente_id: cliente_id,
@@ -36,10 +32,8 @@ exports.getPontosCliente = async (cliente_id) => {
   }
 };
 
-// Adicionar pontos a um cliente
 exports.adicionar = async (cliente_id, quantidade) => {
   try {
-    // Verificar se o cliente existe
     const cliente = await Usuario.findOne({
       where: {
         usuario_id: cliente_id,
@@ -51,19 +45,16 @@ exports.adicionar = async (cliente_id, quantidade) => {
       return null;
     }
 
-    // Buscar ou criar registro de pontos
     let pontos = await Pontos.findOne({
       where: { cliente_id: cliente_id },
     });
 
     if (!pontos) {
-      // Criar novo registro
       pontos = await Pontos.create({
         cliente_id: cliente_id,
         saldo_pontos: quantidade,
       });
     } else {
-      // Atualizar saldo existente
       pontos.saldo_pontos += quantidade;
       await pontos.save();
     }
@@ -75,10 +66,8 @@ exports.adicionar = async (cliente_id, quantidade) => {
   }
 };
 
-// Resgatar pontos de um cliente
 exports.resgatar = async (cliente_id, quantidade) => {
   try {
-    // Verificar se o cliente existe
     const cliente = await Usuario.findOne({
       where: {
         usuario_id: cliente_id,
@@ -90,18 +79,16 @@ exports.resgatar = async (cliente_id, quantidade) => {
       return null;
     }
 
-    // Buscar registro de pontos
     const pontos = await Pontos.findOne({
       where: { cliente_id: cliente_id },
     });
 
     if (!pontos) {
-      return null; // Cliente não tem pontos
+      return null;
     }
 
-    // Verificar se tem saldo suficiente
     if (pontos.saldo_pontos < quantidade) {
-      return null; // Saldo insuficiente
+      return null;
     }
 
     // Subtrair pontos
@@ -115,7 +102,6 @@ exports.resgatar = async (cliente_id, quantidade) => {
   }
 };
 
-// Listar todos os registros de pontos (para admin)
 exports.listarTodos = async () => {
   try {
     const pontos = await Pontos.findAll({

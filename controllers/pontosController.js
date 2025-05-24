@@ -1,5 +1,6 @@
 const pontosService = require("../services/pontosService");
 
+//Busca o saldo de pontos de um cliente específico
 exports.getPontosCliente = async (req, res) => {
   try {
     const { cliente_id } = req.params;
@@ -27,6 +28,7 @@ exports.getPontosCliente = async (req, res) => {
   }
 };
 
+//Adiciona pontos ao saldo de um cliente (apenas admin)
 exports.adicionar = async (req, res) => {
   try {
     const { cliente_id, quantidade } = req.body;
@@ -63,6 +65,7 @@ exports.adicionar = async (req, res) => {
   }
 };
 
+// Resgata pontos do saldo de um cliente
 exports.resgatar = async (req, res) => {
   try {
     const { cliente_id, quantidade } = req.body;

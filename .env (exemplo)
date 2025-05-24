@@ -1,0 +1,7 @@
+DB_NAME=seu banco
+DB_USER=usuario do banco
+DB_PASSWORD= senha do banco
+DB_HOST= host do banco
+DB_DIALECT= banco (dialeto)
+PORT= porta
+JWT_SENHA= senhaJWT

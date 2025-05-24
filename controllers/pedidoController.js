@@ -1,6 +1,6 @@
 const pedidoService = require("../services/pedidoService");
 
-// GET /pedidos
+// Lista todos os pedidos (apenas admin)
 exports.listar = async (req, res) => {
   try {
     const pedidos = await pedidoService.listar();
@@ -13,9 +13,10 @@ exports.listar = async (req, res) => {
   }
 };
 
-// GET /pedidos/meus-pedidos
+// Lista pedidos do cliente autenticado
 exports.listarMeusPedidos = async (req, res) => {
   try {
+    // Obtém o ID do cliente a partir do token de autenticação
     const cliente_id = req.usuario.id;
     const pedidos = await pedidoService.listarPorCliente(cliente_id);
     return res.json(pedidos);
@@ -27,7 +28,7 @@ exports.listarMeusPedidos = async (req, res) => {
   }
 };
 
-// GET /pedidos/:id
+// Busca um pedido específico por ID
 exports.buscarPorId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -44,20 +45,20 @@ exports.buscarPorId = async (req, res) => {
   }
 };
 
-// POST /pedidos
+// Cria um novo pedido
 exports.criar = async (req, res) => {
   try {
     const { itens } = req.body;
     const cliente_id = req.usuario.id; // Pega do token de autenticação
 
-    // Validação básica
+    // Validação básica - verifica se itens foram informados
     if (!itens || !Array.isArray(itens) || itens.length === 0) {
       return res.status(400).json({
         message: "É necessário informar pelo menos um item no pedido",
       });
     }
 
-    // Validar estrutura dos itens
+    // Valida estrutura dos itens
     for (const item of itens) {
       if (!item.produto_id || !item.quantidade) {
         return res.status(400).json({
@@ -71,7 +72,7 @@ exports.criar = async (req, res) => {
         });
       }
     }
-
+    // Cria o pedido no banco de dados
     const novoPedido = await pedidoService.criar(
       {
         cliente_id,
@@ -92,19 +93,21 @@ exports.criar = async (req, res) => {
   }
 };
 
-// PATCH /pedidos/:id/status
+// Atualiza o status de um pedido (apenas admin)
 exports.atualizarStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    // Validar status
+    // Lista de status válidos para validação
     const statusValidos = [
       "Recebido",
       "Em Preparo",
       "Pronto para Retirada",
       "Finalizado",
     ];
+
+    // Valida se o status fornecido é válido
     if (!statusValidos.includes(status)) {
       return res.status(400).json({
         message: "Status inválido",
@@ -129,7 +132,7 @@ exports.atualizarStatus = async (req, res) => {
   }
 };
 
-// DELETE /pedidos/:id
+// Remove um pedido do sistema (apenas admin)
 exports.deletar = async (req, res) => {
   try {
     const { id } = req.params;

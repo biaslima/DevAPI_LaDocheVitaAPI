@@ -1,6 +1,5 @@
 const { Pedido, ItemPedido, Produto } = require("../models");
 
-// Listar todos os pedidos (com itens)
 exports.listar = async () => {
   return await Pedido.findAll({
     include: [
@@ -17,7 +16,6 @@ exports.listar = async () => {
   });
 };
 
-// Listar pedidos por cliente_id (com itens)
 exports.listarPorCliente = async (cliente_id) => {
   return await Pedido.findAll({
     where: { cliente_id },
@@ -36,7 +34,6 @@ exports.listarPorCliente = async (cliente_id) => {
   });
 };
 
-// Buscar por ID (com itens)
 exports.buscarPorId = async (id) => {
   return await Pedido.findByPk(id, {
     include: [
@@ -53,11 +50,8 @@ exports.buscarPorId = async (id) => {
   });
 };
 
-// Criar pedido e seus itens
 exports.criar = async (pedidoData, itens) => {
   let valorTotalCalculado = 0;
-
-  // Validar produtos e calcular valor total
   const itensValidados = [];
 
   for (const item of itens) {
@@ -88,13 +82,11 @@ exports.criar = async (pedidoData, itens) => {
     });
   }
 
-  // Criar o pedido com o valor total calculado
   const pedido = await Pedido.create({
     ...pedidoData,
     valor_total: valorTotalCalculado.toFixed(2),
   });
 
-  // Criar os itens do pedido e atualizar estoque
   for (const item of itensValidados) {
     await ItemPedido.create({
       pedido_id: pedido.pedido_id,
@@ -103,7 +95,6 @@ exports.criar = async (pedidoData, itens) => {
       valor_unitario: item.valor_unitario,
     });
 
-    // Atualizar o estoque do produto
     item.produto.estoque -= item.quantidade;
     await item.produto.save();
   }
@@ -111,7 +102,6 @@ exports.criar = async (pedidoData, itens) => {
   return pedido;
 };
 
-// Atualizar status do pedido
 exports.atualizarStatus = async (id, novoStatus) => {
   const pedido = await Pedido.findByPk(id);
   if (!pedido) return null;
@@ -119,7 +109,6 @@ exports.atualizarStatus = async (id, novoStatus) => {
   return pedido;
 };
 
-// Deletar pedido (e opcionalmente os itens)
 exports.deletar = async (id) => {
   const pedido = await Pedido.findByPk(id);
   if (!pedido) return false;

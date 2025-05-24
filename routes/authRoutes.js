@@ -5,7 +5,6 @@ const { autenticacao } = require("../config/authMiddleware");
 
 router.post("/register", authController.register);
 router.post("/login", authController.login);
-
 router.get("/me", autenticacao, (req, res) => {
   res.json({
     message: "Token válido",

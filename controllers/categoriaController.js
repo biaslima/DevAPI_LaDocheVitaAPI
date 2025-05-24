@@ -1,6 +1,6 @@
 const categoriaService = require("../services/categoriaService");
 
-// Listar todas as categorias
+// Lista todas as categorias cadastradas
 exports.listar = async (req, res) => {
   const categorias = await categoriaService.listar();
   return res.status(200).json(categorias);
